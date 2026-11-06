@@ -55,7 +55,7 @@
     <div><b>项目名称</b>外卖点餐与配送系统</div>
     <div><b>学号、姓名</b>251220048　曹旭航</div>
     <div><b>实验一基线</b>29 条需求（已确认 26 条）</div>
-    <div><b>交付内容</b>UML 图 9 张 · UI 界面 13 屏 · 设计报告</div>
+    <div><b>交付内容</b>UML 图 9 张 · UI 界面 14 屏 · 设计报告</div>
     <div><b>日期</b>2026-11-06</div>
   </div>
 </div>
@@ -83,7 +83,7 @@
 <ul>
 <li><b>结构设计</b>：给出分层架构、模块划分、模块间依赖与协作方式，说明"为什么这样分"。</li>
 <li><b>UML 建模</b>：9 张 PlantUML 图，覆盖结构类（类图、组件图、包图、部署图）、行为类（用例图、活动图、状态图）、交互类（时序图 ×2），远超任务书"至少 4 张、每类 1 张"的要求。</li>
-<li><b>UI 设计</b>：13 屏界面，覆盖 8 个功能模块与 4 类角色，移动端 390×844、桌面端 1280×800 两套栅格。</li>
+<li><b>UI 设计</b>：14 屏界面，覆盖 8 个功能模块与 4 类角色，移动端 390×844、桌面端 1280×800 两套栅格。</li>
 <li><b>设计说明</b>：关键决策的理由、数据存储形式、接口约定，使后续实现者可以直接照着搭建。</li>
 </ul>
 
@@ -354,7 +354,7 @@ M8 统计与审计　← 只读 M2/M4/M6，不反向写业务表
 <thead><tr><th style="width:17%">入口</th><th style="width:23%">角色</th><th style="width:36%">主要界面</th><th style="width:24%">对应模块</th></tr></thead>
 <tbody>
 <tr><td>顾客端 H5</td><td>顾客</td><td>菜品查询、菜品详情、购物车、确认订单、订单详情、我的订单</td><td>M1、M3、M4、M7</td></tr>
-<tr><td>商家端 Web</td><td>商家</td><td>订单看板、菜品与库存、经营统计</td><td>M2、M4、M5、M8</td></tr>
+<tr><td>商家端 Web</td><td>商家</td><td>订单看板、菜品与库存、店铺设置、经营统计</td><td>M2、M4、M5、M8</td></tr>
 <tr><td>骑手端 App</td><td>配送人员</td><td>配送任务（取餐/送达/报备失败）</td><td>M6</td></tr>
 <tr><td>运营管理端 Web</td><td>平台管理员</td><td>资质审核、异常处理、操作日志</td><td>M1、M7、M8</td></tr>
 </tbody>
@@ -399,7 +399,7 @@ M8 统计与审计　← 只读 M2/M4/M6，不反向写业务表
 
 <h3>5.3 骑手端</h3>
 <div class="two keep">
-  <div><img class="ui-mobile" src="UI界面/10-骑手-配送任务.png"><p class="cap">图 5-7 配送任务</p></div>
+  <div><img class="ui-mobile" src="UI界面/11-骑手-配送任务.png"><p class="cap">图 5-7 配送任务</p></div>
   <div style="width:95mm;text-align:left;font-size:9.4pt;line-height:1.8">
     <p><b>功能</b>：待取餐 / 配送中 / 已完成三个分组；每个任务卡显示商家取餐号、顾客地址、距离与预计时间。</p>
     <p><b>交互要点</b>：</p>
@@ -417,24 +417,27 @@ M8 统计与审计　← 只读 M2/M4/M6，不反向写业务表
 <p class="cap">图 5-8 订单看板（待接单倒计时、接单/拒单）</p>
 <div class="figure keep"><img class="ui-desktop" src="UI界面/08-商家-菜品与库存.png"></div>
 <p class="cap">图 5-9 菜品与库存（改价、补货、售罄、上下架）</p>
+<div class="figure keep"><img class="ui-desktop" src="UI界面/10-商家-店铺设置.png"></div>
+<p class="cap">图 5-10 店铺设置（营业状态、营业时间、临时停业）</p>
 <div class="figure keep"><img class="ui-desktop" src="UI界面/09-商家-经营统计.png"></div>
-<p class="cap">图 5-10 经营统计（营业额、销量、异常率与统计口径）</p>
+<p class="cap">图 5-11 经营统计（营业额、销量、异常率与统计口径）</p>
 <table>
 <thead><tr><th style="width:16%">界面</th><th style="width:44%">功能与交互要点</th><th style="width:40%">对应需求/设计点</th></tr></thead>
 <tbody>
 <tr><td>订单看板</td><td>KPI 区显示待接单数与超时率；每条待接单给出剩余处理时间倒计时，低于 5 分钟显示红色；接单/拒单两键并列，拒单强制填原因；右侧提示区解释"拒单会自动退款并释放库存"</td><td>REQ-011（接单/拒单）、REQ-024（5 分钟超时）、REQ-017（超时率）</td></tr>
 <tr><td>菜品与库存</td><td>表格直接呈现"剩余/总量"；余量为 0 标红"已售罄"；改价弹层显示原价→新价，并注明"不影响已下单订单"；补货、下架在同一行操作</td><td>REQ-005（改价留痕、每日库存）、REQ-008（快照不影响历史单）</td></tr>
+<tr><td>店铺设置</td><td>营业状态三选一（营业中/已打烊/临时停业），临时停业必须填原因；营业时间支持跨零点勾选；店铺资料中的证照编号只读并标注"已校验唯一"；底部状态变更记录只追加不可改</td><td>REQ-004（营业状态与跨零点）、REQ-002（证照唯一）、REQ-018（变更留痕）</td></tr>
 <tr><td>经营统计</td><td>7 日营业额柱状图 + 菜品销量 Top5；KPI 含超时未接单率与配送失败率；页面底部固定"统计口径"说明，避免与订单列表对不上</td><td>REQ-017（统计汇总与口径）、REQ-002（营业额只计已完成）</td></tr>
 </tbody>
 </table>
 
 <h3>5.5 平台管理端</h3>
-<div class="figure keep"><img class="ui-desktop" src="UI界面/11-管理端-资质审核.png"></div>
-<p class="cap">图 5-11 资质审核（证照唯一性校验、驳回必填原因）</p>
-<div class="figure keep"><img class="ui-desktop" src="UI界面/12-管理端-异常处理.png"></div>
-<p class="cap">图 5-12 异常处理（退款异常队列、配送失败核实）</p>
-<div class="figure keep"><img class="ui-desktop" src="UI界面/13-管理端-操作日志.png"></div>
-<p class="cap">图 5-13 操作日志（多条件查询、状态前后变化、越权拦截记录）</p>
+<div class="figure keep"><img class="ui-desktop" src="UI界面/12-管理端-资质审核.png"></div>
+<p class="cap">图 5-12 资质审核（证照唯一性校验、驳回必填原因）</p>
+<div class="figure keep"><img class="ui-desktop" src="UI界面/13-管理端-异常处理.png"></div>
+<p class="cap">图 5-13 异常处理（退款异常队列、配送失败核实）</p>
+<div class="figure keep"><img class="ui-desktop" src="UI界面/14-管理端-操作日志.png"></div>
+<p class="cap">图 5-14 操作日志（多条件查询、状态前后变化、越权拦截记录）</p>
 <table>
 <thead><tr><th style="width:16%">界面</th><th style="width:44%">功能与交互要点</th><th style="width:40%">对应需求/设计点</th></tr></thead>
 <tbody>
@@ -507,12 +510,12 @@ M8 统计与审计　← 只读 M2/M4/M6，不反向写业务表
 <table>
 <thead><tr><th style="width:14%">项目</th><th>内容</th></tr></thead>
 <tbody>
-<tr><td>使用场景</td><td>13 屏界面需要统一的视觉规范与布局。</td></tr>
+<tr><td>使用场景</td><td>14 屏界面需要统一的视觉规范与布局。</td></tr>
 <tr><td>我的提示词</td><td>摘要：「设计外卖 App 的菜品列表页和购物车页，给出配色、卡片结构与主要元素。」</td></tr>
 <tr><td>生成结果</td><td>给出了橙色主色 + 圆角卡片 + 图片左文右价的布局建议，风格可用；但只画了"一切正常"的状态，没有售罄、改价、超时等异常态；桌面端完全没有考虑。</td></tr>
 <tr><td>优点</td><td>配色方案（#FF6B35 主色、语义色分离）与卡片信息层级合理，直接沿用；省去了配色试错。</td></tr>
 <tr><td>问题</td><td>①异常态缺失，而实验一的 11 条异常需求最终都要在界面上表达；②移动端与桌面端没有区分栅格。</td></tr>
-<tr><td>我的修改</td><td>建立 8px 栅格与移动 390×844 / 桌面 1280×800 两套尺寸；给购物车加"价格已变化"与"售罄置灰"、给商家看板加 5 分钟倒计时、给订单详情加禁用态与原因说明、给异常处理页加"重试/重新派单"双路径；共 13 屏全部重画。</td></tr>
+<tr><td>我的修改</td><td>建立 8px 栅格与移动 390×844 / 桌面 1280×800 两套尺寸；给购物车加"价格已变化"与"售罄置灰"、给商家看板加 5 分钟倒计时、给订单详情加禁用态与原因说明、给异常处理页加"重试/重新派单"双路径；共 14 屏全部重画。</td></tr>
 </tbody>
 </table>
 
@@ -585,7 +588,7 @@ M8 统计与审计　← 只读 M2/M4/M6，不反向写业务表
 <tr><td>实验报告.pdf</td><td>1</td><td>本报告</td></tr>
 <tr><td>UML/*.puml</td><td>9</td><td>PlantUML 源文件，可直接重新渲染</td></tr>
 <tr><td>UML/*.png</td><td>9</td><td>对应的渲染图，报告中的插图即引用这些文件</td></tr>
-<tr><td>UI界面/*.png</td><td>13</td><td>顾客端 6 屏、商家端 3 屏、骑手端 1 屏、管理端 3 屏</td></tr>
+<tr><td>UI界面/*.png</td><td>14</td><td>顾客端 6 屏、商家端 4 屏、骑手端 1 屏、管理端 3 屏</td></tr>
 </tbody>
 </table>
 
@@ -621,7 +624,7 @@ M8 统计与审计　← 只读 M2/M4/M6，不反向写业务表
 <thead><tr><th style="width:11%">需求</th><th style="width:25%">名称</th><th style="width:9%">状态</th><th style="width:13%">模块</th><th style="width:24%">图</th><th style="width:18%">界面</th></tr></thead>
 <tbody>
 <tr><td>REQ-001</td><td>顾客注册与登录</td><td>已确认</td><td>M1</td><td>用例图、类图</td><td>—</td></tr>
-<tr><td>REQ-002</td><td>商家与骑手资质审核</td><td>已确认</td><td>M1</td><td>用例图、活动图</td><td>图 5-11</td></tr>
+<tr><td>REQ-002</td><td>商家与骑手资质审核</td><td>已确认</td><td>M1</td><td>用例图、活动图</td><td>图 5-12</td></tr>
 <tr><td>REQ-003</td><td>角色权限控制</td><td>已确认</td><td>M1</td><td>组件图、类图</td><td>全部入口</td></tr>
 <tr><td>REQ-004</td><td>店铺营业状态管理</td><td>已确认</td><td>M2</td><td>类图、状态图（隐含）</td><td>图 5-1</td></tr>
 <tr><td>REQ-005</td><td>菜品维护与每日库存</td><td>已确认</td><td>M2</td><td>类图（Dish/DailyStock）</td><td>图 5-2、5-9</td></tr>
@@ -631,18 +634,18 @@ M8 统计与审计　← 只读 M2/M4/M6，不反向写业务表
 <tr><td>REQ-009</td><td>重复下单与重复请求处理</td><td>已确认</td><td>M4</td><td>活动图、时序图 1</td><td>图 5-4</td></tr>
 <tr><td>REQ-010</td><td>库存并发扣减与售罄拦截</td><td>已确认</td><td>M5</td><td>活动图、时序图 1/2</td><td>图 5-2、5-9</td></tr>
 <tr><td>REQ-011</td><td>商家接单与拒单</td><td>已确认</td><td>M4</td><td>状态图、用例图</td><td>图 5-8</td></tr>
-<tr><td>REQ-012</td><td>订单取消与退款一致性</td><td>已确认</td><td>M4/M7</td><td>状态图、类图（Refund）</td><td>图 5-5、5-12</td></tr>
+<tr><td>REQ-012</td><td>订单取消与退款一致性</td><td>已确认</td><td>M4/M7</td><td>状态图、类图（Refund）</td><td>图 5-5、5-13</td></tr>
 <tr><td>REQ-013</td><td>制作完成与配送指派</td><td>已确认</td><td>M6</td><td>状态图、组件图</td><td>图 5-8</td></tr>
 <tr><td>REQ-014</td><td>配送执行与送达确认</td><td>已确认</td><td>M6</td><td>状态图、用例图</td><td>图 5-7</td></tr>
 <tr><td>REQ-015</td><td>骑手评价与评分</td><td>已拒绝</td><td>—</td><td>—</td><td>不预留入口</td></tr>
-<tr><td>REQ-016</td><td>订单与操作日志多条件查询</td><td>已确认</td><td>M8</td><td>类图、组件图</td><td>图 5-6、5-13</td></tr>
-<tr><td>REQ-017</td><td>经营统计汇总</td><td>已确认</td><td>M8</td><td>组件图</td><td>图 5-10</td></tr>
-<tr><td>REQ-018</td><td>关键操作日志记录</td><td>已确认</td><td>M8</td><td>类图（OperationLog）、时序图</td><td>图 5-13</td></tr>
+<tr><td>REQ-016</td><td>订单与操作日志多条件查询</td><td>已确认</td><td>M8</td><td>类图、组件图</td><td>图 5-6、5-14</td></tr>
+<tr><td>REQ-017</td><td>经营统计汇总</td><td>已确认</td><td>M8</td><td>组件图</td><td>图 5-11</td></tr>
+<tr><td>REQ-018</td><td>关键操作日志记录</td><td>已确认</td><td>M8</td><td>类图（OperationLog）、时序图</td><td>图 5-14</td></tr>
 <tr><td>REQ-019</td><td>在线支付与自动退款</td><td>已拒绝</td><td>—</td><td>—</td><td>界面标注"货到付款"</td></tr>
 <tr><td>REQ-020</td><td>查询与下单响应时间</td><td>已确认</td><td>—</td><td>部署图（容量估算）</td><td>—</td></tr>
 <tr><td>REQ-021</td><td>数据唯一性与一致性约束</td><td>已确认</td><td>全部</td><td>类图、3.8 表设计</td><td>—</td></tr>
 <tr><td>REQ-022</td><td>账号与敏感信息保护</td><td>已确认</td><td>M1</td><td>组件图（鉴权链）</td><td>图 5-7、5-8 脱敏</td></tr>
-<tr><td>REQ-023</td><td>配送失败与地址异常</td><td>已确认</td><td>M6</td><td>活动图、状态图</td><td>图 5-7、5-12</td></tr>
+<tr><td>REQ-023</td><td>配送失败与地址异常</td><td>已确认</td><td>M6</td><td>活动图、状态图</td><td>图 5-7、5-13</td></tr>
 <tr><td>REQ-024</td><td>超时未接单自动取消</td><td>已确认</td><td>M4</td><td>时序图 2、状态图</td><td>图 5-8</td></tr>
 <tr><td>REQ-025</td><td>可用性与故障恢复</td><td>已确认</td><td>—</td><td>部署图</td><td>—</td></tr>
 <tr><td>REQ-026</td><td>骑手抢单模式</td><td>待确认</td><td>M6</td><td>—（预留字段）</td><td>不提供入口</td></tr>
