@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>实验二 软件设计与建模 - 外卖点餐与配送系统</title>
+<style>
+  @page { size: A4; margin: 17mm 15mm 15mm 15mm; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; box-sizing: border-box; }
+  body { font-family: "Microsoft YaHei","PingFang SC","Segoe UI",sans-serif; font-size: 10.3pt; line-height: 1.68; color:#1b1b1b; margin:0; }
+  h1 { font-size: 21pt; margin: 0 0 6px; letter-spacing: 2px; }
+  h2 { font-size: 14pt; margin: 20px 0 8px; padding: 3px 0 3px 9px; border-left: 4px solid #2C5F8A; background:#F2F7FB; page-break-after: avoid; }
+  h3 { font-size: 11.6pt; margin: 14px 0 6px; color:#204A6B; page-break-after: avoid; }
+  h4 { font-size: 10.6pt; margin: 10px 0 4px; color:#33506B; page-break-after: avoid; }
+  p { margin: 5px 0 7px; text-align: justify; }
+  ul,ol { margin: 4px 0 8px; padding-left: 20px; }
+  li { margin: 2px 0; }
+  table { border-collapse: collapse; width: 100%; font-size: 9pt; margin: 6px 0 12px; }
+  th,td { border: 1px solid #B7C5D1; padding: 4px 5px; vertical-align: top; line-height: 1.45; }
+  th { background: #E9F1F8; font-weight: 600; text-align: left; }
+  tr { page-break-inside: avoid; }
+  thead { display: table-header-group; }
+  .cover { padding: 26mm 0 6mm; text-align: center; }
+  .cover .sub { font-size: 13pt; color:#33506B; margin-top: 4px; }
+  .cover .meta { margin-top: 32mm; display:inline-block; text-align:left; font-size: 11pt; line-height: 2.05; }
+  .cover .meta b { display:inline-block; width: 92px; color:#33506B; font-weight:600; }
+  .rule { height: 3px; background:#2C5F8A; margin: 14px auto 0; width: 76%; }
+  .note { background:#FBF7E8; border:1px solid #E2D6A8; padding:7px 9px; font-size:9.4pt; margin:8px 0 12px; }
+  .box { border:1px solid #B7C5D1; background:#FAFCFE; padding:8px 11px; margin:8px 0 12px; font-size:9.6pt; line-height:1.75; }
+  .pb { page-break-before: always; }
+  .tag { font-family: Consolas,monospace; font-size:9.2pt; background:#F0F0F0; padding:1px 3px; }
+  .small { font-size: 9pt; color:#555; }
+  .cap { font-size: 9pt; color:#44515E; text-align:center; margin: 4px 0 12px; }
+  .figure { text-align:center; margin: 8px 0 4px; page-break-inside: avoid; }
+  .figure img { max-width: 100%; border: 1px solid #DCE3EA; }
+  .fig-tall img { max-height: 150mm; width: auto; max-width: 100%; }
+  .ui-mobile { width: 62mm; }
+  .ui-desktop { width: 172mm; }
+  .two { display:flex; gap:6mm; justify-content:center; align-items:flex-start; flex-wrap:wrap; }
+  .keep { page-break-inside: avoid; }
+  table.matrix td:first-child, table.matrix th:first-child { white-space: nowrap; }
+  .kpi { display:flex; gap:8px; margin:8px 0 12px; }
+  .kpi div { flex:1; border:1px solid #B7C5D1; border-radius:6px; padding:8px 10px; background:#FAFCFE; }
+  .kpi b { display:block; font-size:16pt; color:#204A6B; }
+  .kpi span { font-size:8.8pt; color:#5A6B7B; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div style="font-size:12pt;color:#5A6B7B;letter-spacing:6px;">软件工程 实验二</div>
+  <h1>软件设计与建模</h1>
+  <div class="sub">外卖点餐与配送系统</div>
+  <div class="rule"></div>
+  <div class="meta">
+    <div><b>项目名称</b>外卖点餐与配送系统</div>
+    <div><b>学号、姓名</b>251220048　曹旭航</div>
+    <div><b>实验一基线</b>29 条需求（已确认 26 条）</div>
+    <div><b>交付内容</b>UML 图 9 张 · UI 界面 13 屏 · 设计报告</div>
+    <div><b>日期</b>2026-11-06</div>
+  </div>
+</div>
+
+<h2 class="pb">1 项目概况</h2>
+
+<h3>1.1 项目选择与要解决的问题</h3>
+<p>本实验沿用实验一选定的<b>外卖点餐与配送系统</b>。系统服务校园周边三公里内的餐饮外卖场景，覆盖顾客、商家、配送人员、平台管理员四类角色，解决四个现实问题：订单靠人工记录导致漏单错单、价格靠口头约定导致改价纠纷、库存靠人工判断导致超卖、状态不同步导致"顾客以为在做、商家以为已送"。实验一已把这些问题整理成 29 条需求，本实验的任务是把这些需求翻译成可实现的软件结构。</p>
+
+<h3>1.2 实验一需求基线回顾</h3>
+<p>设计不是重新做需求，而是把实验一的需求映射到模块、类、状态与界面。下表是本次设计直接依赖的基线数据。</p>
+<table>
+<thead><tr><th style="width:22%">维度</th><th style="width:22%">基线</th><th>设计中如何使用</th></tr></thead>
+<tbody>
+<tr><td>需求规模</td><td>29 条（已确认 26 条：功能 20、非功能 5、约束 1；已拒绝 2；待确认 1）</td><td>每个功能模块都要能追溯到需求编号，附录 A 给出完整矩阵</td></tr>
+<tr><td>用户角色</td><td>顾客、商家、配送人员、平台管理员（REQ-003）</td><td>决定 4 个客户端入口 + 服务端"角色 + 数据归属"双重校验</td></tr>
+<tr><td>订单状态</td><td>9 个状态、9 条白名单转换（REQ-029）</td><td>落成 OrderStateMachine 与状态图，非法转换拒绝</td></tr>
+<tr><td>核心数据</td><td>10 类业务数据（REQ-021）</td><td>落成 12 张主要表与唯一约束</td></tr>
+<tr><td>异常场景</td><td>11 条需求涉及异常/边界/冲突</td><td>落成幂等、条件扣减、超时任务、退款状态机、乐观锁</td></tr>
+<tr><td>质量属性</td><td>性能、安全、可用性、易用性、兼容性（REQ-020/022/025/027/028）</td><td>决定部署形态、事务边界、脱敏策略与双端响应式 UI</td></tr>
+</tbody>
+</table>
+
+<h3>1.3 本实验目标与交付物</h3>
+<ul>
+<li><b>结构设计</b>：给出分层架构、模块划分、模块间依赖与协作方式，说明"为什么这样分"。</li>
+<li><b>UML 建模</b>：9 张 PlantUML 图，覆盖结构类（类图、组件图、包图、部署图）、行为类（用例图、活动图、状态图）、交互类（时序图 ×2），远超任务书"至少 4 张、每类 1 张"的要求。</li>
+<li><b>UI 设计</b>：13 屏界面，覆盖 8 个功能模块与 4 类角色，移动端 390×844、桌面端 1280×800 两套栅格。</li>
+<li><b>设计说明</b>：关键决策的理由、数据存储形式、接口约定，使后续实现者可以直接照着搭建。</li>
+</ul>
+
+<h2>2 软件主要功能</h2>
+
+<h3>2.1 功能模块划分</h3>
+<p>按"一个模块对应一组内聚的业务能力、且能独立被测试"的原则，把 20 条已确认功能需求收敛为 8 个功能模块。模块编号 M1–M8 在后续架构图、界面与需求矩阵中统一使用。</p>
+<table>
+<thead><tr><th style="width:6%">编号</th><th style="width:17%">模块</th><th style="width:38%">职责</th><th style="width:20%">对应需求</th><th style="width:19%">主要使用角色</th></tr></thead>
+<tbody>
+<tr><td>M1</td><td>账号与权限</td><td>注册登录、资质审核、角色与数据归属校验、口令哈希与脱敏</td><td>REQ-001、002、003、022</td><td>全部角色</td></tr>
+<tr><td>M2</td><td>店铺与菜品</td><td>店铺资料与营业状态（营业中/打烊/临时停业）、菜品增删改上下架、改价留痕</td><td>REQ-004、005</td><td>商家、管理员</td></tr>
+<tr><td>M3</td><td>查询与购物车</td><td>关键词/分类/价格/营业中筛选与排序、购物车合并、价格变化与售罄提示</td><td>REQ-006、007</td><td>顾客</td></tr>
+<tr><td>M4</td><td>订单</td><td>下单（幂等 + 价格快照）、接单/拒单、制作完成、取消、超时自动取消、状态机</td><td>REQ-008、009、011、012、024、029</td><td>顾客、商家、系统</td></tr>
+<tr><td>M5</td><td>库存</td><td>每日库存重置、事务内条件扣减、按订单幂等释放、售罄标记</td><td>REQ-010</td><td>系统（被订单调用）</td></tr>
+<tr><td>M6</td><td>配送</td><td>指派骑手、取餐、送达、自动确认、配送失败报备与重派</td><td>REQ-013、014、023</td><td>骑手、商家、管理员</td></tr>
+<tr><td>M7</td><td>退款与异常</td><td>取消/拒单/超时/失败统一登记退款、退款异常重试、与订单状态同事务</td><td>REQ-012、019（已拒绝在线支付）</td><td>管理员、系统</td></tr>
+<tr><td>M8</td><td>统计与审计</td><td>营业额与销量统计、平台排名、关键操作日志记录与多条件查询</td><td>REQ-016、017、018</td><td>商家、管理员</td></tr>
+</tbody>
+</table>
+
+<div class="note"><b>为什么不把"退款"放进订单模块？</b>因为退款有自己的状态（退款中/已退款/退款异常）、自己的失败重试语义，并且会同时被订单（取消）、商家（拒单）、配送（失败）、系统（超时）四个入口触发。把它独立成 M7，四个入口都调用同一套退款逻辑，避免四处各写一份导致状态不一致——这正是实验一中 REV-004 指出的问题。</div>
+
+<h3>2.2 模块之间的依赖关系</h3>
+<p>依赖方向是单向的、可画成有向无环图：M1 被所有模块依赖（鉴权），M3 依赖 M2（菜品数据），M4 编排 M5/M6/M7/M8，M8 只读其它模块的数据。没有反向依赖，也没有环形依赖。</p>
+<div class="box">
+M1 账号与权限　←被全部模块依赖<br>
+M2 店铺与菜品　← M3 查询与购物车<br>
+M3 查询与购物车　→ M4 订单（提交时读取购物车快照）<br>
+M4 订单　→ M5 库存（扣减/释放）、M6 配送（生成配送单）、M7 退款（登记）、M8 审计（写日志）<br>
+M5 库存　→（无下游，仅操作自己的库存表）<br>
+M6 配送　→ M4（回写订单状态）、M8（派单日志）<br>
+M7 退款　→ M4（回写退款状态）、M8（退款日志）<br>
+M8 统计与审计　← 只读 M2/M4/M6，不反向写业务表
+</div>
+
+<h3>2.3 功能与实验一需求的覆盖对照</h3>
+<table>
+<thead><tr><th style="width:40%">实验一要求（节选）</th><th style="width:34%">本实验的设计落点</th><th style="width:26%">验证材料</th></tr></thead>
+<tbody>
+<tr><td>四类角色与权限</td><td>M1 + 网关鉴权 + 服务端数据归属校验</td><td>用例图、类图 User/Role、界面 11</td></tr>
+<tr><td>订单 ≥4 个状态与允许/禁止转换</td><td>9 状态 + 9 条白名单 + 版本号乐观锁</td><td>状态图、REQ-029、OrderStateMachine</td></tr>
+<tr><td>数据关联、唯一性、同步更新</td><td>12 张表 + 唯一索引 + 同事务更新</td><td>3.8 数据设计、类图</td></tr>
+<tr><td>多条件查询 + 统计汇总</td><td>M3 查询条件、M8 日汇总读模型</td><td>界面 1、9、13</td></tr>
+<tr><td>≥2 类异常处理</td><td>幂等、超时、售罄、拒单、配送失败、退款异常</td><td>活动图、时序图 ×2、界面 3/12</td></tr>
+<tr><td>关键操作日志与查询</td><td>OperationLog + AuditService + 界面 13</td><td>类图、组件图、REQ-018</td></tr>
+<tr><td>非功能需求</td><td>部署形态、事务边界、脱敏、双端 UI</td><td>部署图、3.6 决策、界面说明</td></tr>
+</tbody>
+</table>
+
+<h2 class="pb">3 软件架构设计</h2>
+
+<h3>3.1 设计目标与约束</h3>
+<table>
+<thead><tr><th style="width:18%">类别</th><th>内容</th></tr></thead>
+<tbody>
+<tr><td>功能目标</td><td>完整覆盖 M1–M8 八个模块，保证实验一 26 条已确认需求都有落点；核心链路（下单→接单→配送→完成）可闭环运行。</td></tr>
+<tr><td>质量目标</td><td>订单/库存/退款/日志强一致；查询 50 并发 P95 ≤ 1 秒（REQ-020）；越权 100% 拦截（REQ-022）；营业时段可用性 ≥ 99.5%（REQ-025）。</td></tr>
+<tr><td>团队约束</td><td>1 人开发、课程周期内完成、单机可部署。这条约束直接决定了"模块化单体"而不是微服务。</td></tr>
+<tr><td>演进约束</td><td>模块边界要清晰，将来可按 M4/M5/M6 拆分；不在第一版引入分布式事务。</td></tr>
+</tbody>
+</table>
+
+<h3>3.2 架构风格选型</h3>
+<p>架构风格不是越"先进"越好，而是在当前约束下让<b>一致性成本</b>最低。下表比较了三种候选。</p>
+<table>
+<thead><tr><th style="width:14%">候选</th><th style="width:26%">优点</th><th style="width:32%">在本项目中的问题</th><th style="width:28%">结论</th></tr></thead>
+<tbody>
+<tr><td>单体分层（全部逻辑写在一个包）</td><td>开发最快</td><td>订单、库存、退款、日志互相直连，实验一强调的"状态一致、幂等、日志同事务"会散落各处，后续无法维护</td><td>不采用</td></tr>
+<tr><td>微服务（按模块拆 8 个服务）</td><td>边界清晰、可独立部署</td><td>下单要同时改订单库、库存库、日志库，需引入分布式事务或 Saga，复杂度和运维成本远超 1 人课程项目的收益；且 REQ-025 要求"状态变更与日志同事务"，跨库后无法用本地事务保证</td><td>本期不采用，但保留拆分可能</td></tr>
+<tr><td><b>模块化单体 + 分层 + 事件出箱</b></td><td>模块内高内聚、模块间低耦合；一个本地事务就能保证订单/库存/日志强一致；部署只需一个 jar</td><td>需要自律地维护模块边界，否则容易退化成"大泥球"</td><td><b>采用</b></td></tr>
+</tbody>
+</table>
+<p>最终形态：<b>前后端分离</b>（4 个前端入口 + 1 个后端）+ <b>模块化单体</b>（8 个模块，各自有 controller/application/domain/infrastructure）+ <b>事件出箱</b>（通知类副作用走 Outbox 异步投递）。强一致用本地事务，最终一致只用在"通知"和"统计"这类可以延迟的场景。</p>
+
+<h3>3.3 分层结构与依赖规则</h3>
+<p>包图（4.5 节）给出四层：interfaces（控制器与 DTO）→ application（用例编排）→ domain（实体、领域服务、仓储接口）→ infrastructure（持久化、缓存、调度、安全）。三条硬性规则：</p>
+<ol>
+<li><b>依赖只能向下</b>：interfaces 可以调 application，application 可以调 domain，domain 不能反过来调 application 或 infrastructure。</li>
+<li><b>domain 零框架依赖</b>：domain 里不出现 MyBatis、Spring 注解，仓储以接口声明（OrderRepository），由 infrastructure 实现——这就是依赖倒置，好处是领域逻辑可以脱离数据库单测。</li>
+<li><b>定时任务不写 SQL</b>：TimeoutCancelJob 只调用 application 的用例方法，保证"超时取消"和"顾客手动取消"走同一套规则，不会出现两条路径行为不一致。</li>
+</ol>
+
+<h3>3.4 组件划分与信息流</h3>
+<p>组件图（4.4 节）把系统拆成 4 个客户端组件、1 个接入层组件（网关 + 令牌）、9 个应用组件、5 个基础设施组件。几个关键的组件间约定：</p>
+<ul>
+<li><b>客户端只与网关通信</b>，网关负责鉴权、限流与幂等键透传，客户端不直接访问应用服务。</li>
+<li><b>订单组件是编排中心</b>：一次下单在订单组件内完成"幂等校验 → 库存扣减 → 订单落库 → 日志写入"，其它组件不参与这个事务。</li>
+<li><b>库存组件只暴露 deduct/release 两个方法</b>，订单组件不直接改库存表；这样并发控制逻辑只有一处。</li>
+<li><b>通知走 Outbox</b>：订单状态变更只写一条 outbox 事件，由后台投递，避免"通知失败导致下单失败"。</li>
+</ul>
+
+<h3>3.5 关键流程中的模块协作</h3>
+<p>下单与超时取消是两个最能体现架构设计的流程，分别用两张时序图表达（4.9、4.10 节）。这里先说明它们对架构的影响：</p>
+<table>
+<thead><tr><th style="width:18%">流程</th><th style="width:40%">协作要点</th><th style="width:42%">对架构的约束</th></tr></thead>
+<tbody>
+<tr><td>提交订单</td><td>网关鉴权 → 订单服务查幂等键 → 校验价格 → 库存服务条件扣减 → 订单落库 → 审计写日志 → 提交事务 → 投递事件</td><td>订单、明细、库存、幂等记录、日志必须在同一数据库、同一事务内（因此本期不拆库）</td></tr>
+<tr><td>超时取消</td><td>调度器每分钟扫描 → 条件更新改状态 → 释放库存 → 生成退款 → 写日志 → 通知双方</td><td>调度必须可幂等重入；与商家"接单"并发时只能有一方成功（依赖版本号与条件更新）</td></tr>
+</tbody>
+</table>
+
+<h3>3.6 关键设计决策</h3>
+<table>
+<thead><tr><th style="width:5%">#</th><th style="width:20%">决策</th><th style="width:38%">做法</th><th style="width:37%">理由 / 对应需求</th></tr></thead>
+<tbody>
+<tr><td>D1</td><td>订单状态集中管理</td><td>Order.transitTo(target, operator) 内维护白名单表，先校验再改，配合 version 字段做乐观锁</td><td>9 个状态、9 条合法转换分散写会互相矛盾；集中后"禁止的转换"只有一处实现（REQ-029）</td></tr>
+<tr><td>D2</td><td>幂等键 + 唯一索引</td><td>客户端提交时生成 key，服务端先查幂等表，命中直接返回原订单；幂等表对 key 建唯一索引兜底并发</td><td>网络重试、双击、旧页面重放都只能产生一笔订单（REQ-009）</td></tr>
+<tr><td>D3</td><td>库存条件扣减</td><td><span class="tag">UPDATE stock SET sold=sold+? WHERE stock_id=? AND total-sold>=?</span>，影响行数为 0 即整单回滚</td><td>把并发判断交给数据库行锁，避免"先查后改"的竞态导致超卖（REQ-010）</td></tr>
+<tr><td>D4</td><td>价格快照</td><td>订单明细保存下单时的菜名、单价、规格、店铺名，总额由服务端重算后落库</td><td>商家改价不影响历史订单，也防止客户端篡改金额（REQ-008、REQ-005）</td></tr>
+<tr><td>D5</td><td>退款独立状态机</td><td>退款中 → 已退款 / 退款异常；异常可重试，重试按退款单号幂等</td><td>杜绝"订单显示已退款但实际没退"；失败必须可见可处理（REQ-012）</td></tr>
+<tr><td>D6</td><td>日志与业务同事务</td><td>AuditService 与业务写在同一个本地事务，日志只追加不修改</td><td>业务成功必有日志、业务回滚日志不留痕，事后可完整追溯（REQ-018、REQ-025）</td></tr>
+<tr><td>D7</td><td>通知走 Outbox</td><td>状态变更只写 outbox 表，异步投递并重试</td><td>通知失败不能拖垮下单；通知本身允许最终一致</td></tr>
+</tbody>
+</table>
+
+<h3>3.7 部署设计</h3>
+<p>部署图（4.6 节）给出课程原型的部署形态：Nginx 前置 + 2 个应用实例 + 1 个调度节点 + MySQL 主从 + Redis + 对象存储。规格与容量估算如下。</p>
+<table>
+<thead><tr><th style="width:20%">节点</th><th style="width:16%">规格</th><th style="width:26%">职责</th><th style="width:38%">容量与可靠性说明</th></tr></thead>
+<tbody>
+<tr><td>Nginx 接入</td><td>2C4G</td><td>TLS 终止、静态资源、限流、转发</td><td>单点，课程原型可接受；故障时前端提示稍后重试</td></tr>
+<tr><td>应用服务器 ×2</td><td>各 4C8G / JDK 17</td><td>运行 delivery-app.jar</td><td>双实例轮询，单实例故障不影响整体；按 50 并发、P95 1 秒估算单机可承载约 120 QPS 菜品查询</td></tr>
+<tr><td>调度节点</td><td>2C4G</td><td>超时取消、自动确认、日汇总</td><td>多实例时用数据库行锁或 Redis 锁保证同一任务只执行一次</td></tr>
+<tr><td>MySQL 主/从</td><td>各 4C16G</td><td>业务库 + 日志库；从库只读与备份</td><td>主库承担写与强一致读；从库承担统计类只读查询，降低主库压力</td></tr>
+<tr><td>Redis</td><td>2C4G</td><td>会话、热点菜品缓存</td><td>缓存失效不影响正确性，只影响性能（缓存旁路）</td></tr>
+<tr><td>对象存储</td><td>按量</td><td>菜品图片、导出文件</td><td>与业务库解耦，图片地址入库而非存二进制</td></tr>
+</tbody>
+</table>
+
+<h3>3.8 数据存储设计</h3>
+<p>实验一识别出 10 类业务数据，落到 12 张主要表。存储形式统一为 MySQL 8.0，金额一律用<b>整数分</b>存储（避免浮点误差），时间用 DATETIME(3)。</p>
+<table>
+<thead><tr><th style="width:14%">表</th><th style="width:40%">关键字段</th><th style="width:46%">约束与索引</th></tr></thead>
+<tbody>
+<tr><td>user</td><td>id, phone, password_hash, role, audit_status, created_at</td><td>UNIQUE(phone)；role 枚举；口令 bcrypt(cost≥10)</td></tr>
+<tr><td>address</td><td>id, user_id, detail, lng, lat, is_default</td><td>INDEX(user_id)</td></tr>
+<tr><td>shop</td><td>id, owner_id, name, license_no, biz_status, open_time, close_time</td><td>UNIQUE(license_no)；INDEX(biz_status)</td></tr>
+<tr><td>dish</td><td>id, shop_id, name, category, price_cents, spec, status, image_url</td><td>UNIQUE(shop_id, name, spec)；INDEX(shop_id, status)</td></tr>
+<tr><td>daily_stock</td><td>id, dish_id, biz_date, total_qty, sold_qty</td><td>UNIQUE(dish_id, biz_date)；CHECK(sold_qty ≤ total_qty)</td></tr>
+<tr><td>cart_item</td><td>id, customer_id, dish_id, quantity, price_when_added</td><td>UNIQUE(customer_id, dish_id, spec)</td></tr>
+<tr><td>orders</td><td>id, order_no, customer_id, shop_id, total_cents, status, version, idempotency_key, address_snapshot, created_at</td><td>UNIQUE(order_no)；UNIQUE(idempotency_key)；INDEX(customer_id, status)；INDEX(shop_id, status)；乐观锁 version</td></tr>
+<tr><td>order_item</td><td>id, order_id, dish_id, dish_name, unit_price_cents, spec, quantity, subtotal_cents</td><td>INDEX(order_id)；价格与名称为快照</td></tr>
+<tr><td>delivery_task</td><td>id, order_id, rider_id, status, fail_reason, accepted_at, delivered_at</td><td><b>UNIQUE(order_id)</b>（一单一配送单）；INDEX(rider_id, status)</td></tr>
+<tr><td>refund</td><td>id, order_id, amount_cents, status, fail_reason, retry_count, created_at</td><td>UNIQUE(order_id, status='已退款') 由业务保证；INDEX(status)</td></tr>
+<tr><td>operation_log</td><td>id, actor_id, actor_role, action, object_type, object_id, before_state, after_state, result, ip, created_at</td><td>INDEX(object_id)、INDEX(created_at)；仅 INSERT 权限</td></tr>
+<tr><td>outbox_event</td><td>id, event_type, payload, status, retry_count, next_retry_at</td><td>INDEX(status, next_retry_at)</td></tr>
+</tbody>
+</table>
+<p><b>同步更新规则</b>（对应 REQ-021）：订单总额 = 明细小计之和；库存余量 = total_qty − sold_qty，且任何时刻 ≥ 0；退款状态与订单状态在同一事务更新；统计数据每 10 分钟由定时任务从订单表汇总写入 statistics_daily，不实时扫描明细表。</p>
+
+<h3>3.9 接口设计</h3>
+<p>接口统一 REST + JSON，前缀 <span class="tag">/api/v1</span>，统一返回 <span class="tag">{code, message, data}</span>。涉及写操作的接口要求客户端在请求头携带 <span class="tag">X-Idempotency-Key</span>，服务端以此去重。</p>
+<table>
+<thead><tr><th style="width:31%">接口</th><th style="width:9%">方法</th><th style="width:22%">说明</th><th style="width:38%">关键约束</th></tr></thead>
+<tbody>
+<tr><td>/auth/register、/auth/login</td><td>POST</td><td>注册、登录</td><td>手机号唯一；失败 5 次锁定 10 分钟</td></tr>
+<tr><td>/dishes</td><td>GET</td><td>菜品多条件查询</td><td>分页 20；默认按销量降序；只返回营业中店铺</td></tr>
+<tr><td>/cart/items</td><td>POST/PATCH/DELETE</td><td>购物车增删改</td><td>同菜品合并；返回当前价与是否售罄</td></tr>
+<tr><td>/orders</td><td>POST</td><td>提交订单</td><td>必带幂等键；返回 201 + orderNo；库存不足返回 409</td></tr>
+<tr><td>/orders/{no}/accept、/reject</td><td>POST</td><td>商家接单/拒单</td><td>仅本店；拒单必须带 reason；状态冲突返回 409</td></tr>
+<tr><td>/orders/{no}/cancel</td><td>POST</td><td>取消订单</td><td>按状态判断是否允许；返回退款单号</td></tr>
+<tr><td>/delivery/tasks/{id}/accept、/deliver、/fail</td><td>POST</td><td>骑手取餐、送达、报备失败</td><td>仅本人任务；未取餐不能送达；失败必填原因</td></tr>
+<tr><td>/admin/audits、/admin/refunds/{id}/retry</td><td>POST</td><td>资质审核、退款重试</td><td>仅管理员；退款重试按退款单幂等</td></tr>
+<tr><td>/admin/logs</td><td>GET</td><td>日志查询</td><td>管理员全量、商家限本店；分页</td></tr>
+<tr><td>/stats/shop/daily、/stats/platform/rank</td><td>GET</td><td>统计汇总</td><td>营业额只计已完成订单</td></tr>
+</tbody>
+</table>
+
+<h2 class="pb">4 UML 建模</h2>
+
+<h3>4.1 建模思路与图的选取</h3>
+<p>三类 UML 图各自回答不同问题，本实验按"结构 → 行为 → 交互"的顺序建模，每一类都不止一张，共 9 张：</p>
+<table>
+<thead><tr><th style="width:16%">类别</th><th style="width:34%">选取的图</th><th style="width:50%">回答的问题</th></tr></thead>
+<tbody>
+<tr><td>结构类（静态）</td><td>类图（必画）、组件图、包图、部署图</td><td>系统由哪些类/组件/包/节点组成？它们之间是什么关系？代码怎么分层？跑在哪？</td></tr>
+<tr><td>行为类（动态）</td><td>用例图、活动图、状态图</td><td>谁能做什么？一次下单经过哪些判断？订单在生命周期里能怎么变、不能怎么变？</td></tr>
+<tr><td>交互类</td><td>时序图 ×2（提交订单、超时取消）</td><td>多个对象在时间轴上如何协作？异常分支怎么走？</td></tr>
+</tbody>
+</table>
+<p>所有图均用 PlantUML 编写，源文件（.puml）与渲染图（.png）一并提交在 <span class="tag">UML/</span> 目录，便于复现与修改。9 张图的清单如下，正文按此顺序展开。</p>
+<table>
+<thead><tr><th style="width:10%">图号</th><th style="width:20%">图名</th><th style="width:12%">类别</th><th style="width:26%">源文件</th><th style="width:32%">主要回答的问题</th></tr></thead>
+<tbody>
+<tr><td>图 4-1</td><td>用例图</td><td>行为类</td><td>UML用例图.puml</td><td>四类角色各自能做什么，系统边界在哪</td></tr>
+<tr><td>图 4-2</td><td>类图</td><td>结构类</td><td>UML类图.puml</td><td>领域实体、属性、多重性与聚合关系</td></tr>
+<tr><td>图 4-3</td><td>组件图</td><td>结构类</td><td>UML组件图.puml</td><td>系统由哪些组件构成、如何通信</td></tr>
+<tr><td>图 4-4</td><td>包图</td><td>结构类</td><td>UML包图.puml</td><td>代码分层与依赖方向</td></tr>
+<tr><td>图 4-5</td><td>部署图</td><td>结构类</td><td>UML部署图.puml</td><td>软件跑在哪些节点上、容量如何</td></tr>
+<tr><td>图 4-6</td><td>活动图（下单）</td><td>行为类</td><td>UML活动图-下单流程.puml</td><td>一次下单的判断逻辑与失败回滚</td></tr>
+<tr><td>图 4-7</td><td>状态图（订单）</td><td>行为类</td><td>UML状态图-订单.puml</td><td>9 个状态怎么转、哪些不可能发生</td></tr>
+<tr><td>图 4-8</td><td>时序图（提交订单）</td><td>交互类</td><td>UML时序图-提交订单.puml</td><td>幂等与库存事务的对象协作顺序</td></tr>
+<tr><td>图 4-9</td><td>时序图（超时取消）</td><td>交互类</td><td>UML时序图-超时取消.puml</td><td>定时任务与商家接单的并发冲突</td></tr>
+</tbody>
+</table>
+
+<h3>4.2 用例图</h3>
+<p><b>类型</b>：行为类（动态）。<b>目的</b>：界定系统边界，说明四类角色各自能做什么，以及哪些用例是包含/扩展关系。</p>
+<p><b>要素与取舍</b>：5 个参与者（含「定时任务」这一系统参与者，因为超时取消确实是系统主动发起的行为）；22 个用例按 3 组组织（点餐与交易、平台运营、查询与审计）。第一版把用例按 5 个包分组并加了 12 条 include/extend，实测连线交叉严重、图变成 1053×2194 的长条，于是改成 3 组、把"角色权限校验"这类横切用例合并，只保留 8 条关键关系——<b>用例图的价值在于说清边界，不在于把所有关系都画上</b>。</p>
+<div class="figure fig-tall"><img src="UML/UML用例图.png" style="width:108mm"></div>
+<p class="cap">图 4-1 用例图：四类角色 + 系统定时任务的用例边界</p>
+
+<h3>4.3 类图</h3>
+<p><b>类型</b>：结构类（静态），任务书要求必画。<b>目的</b>：给出领域模型——有哪些实体、各自持有什么属性、彼此是 1:1 还是 1:N，以及哪些规则写在实体方法里。</p>
+<p><b>要素与取舍</b>：14 个领域类 + 6 个枚举，按"账号与店铺 / 交易 / 审计与事件 / 枚举"四个包组织。三处刻意设计：</p>
+<ul>
+<li><b>Order 是聚合根</b>：OrderItem 用组合（*--）挂在 Order 下，订单删除/失效时明细不能独立存在；Order 与 DeliveryTask、Refund 都是 0..1，因为一个订单最多一张配送单、最多一笔有效退款。</li>
+<li><b>DailyStock 独立成类</b>：库存不是 Dish 上的一个字段，而是"菜品 × 日期"一行，这样自然支持每日重置，也给条件扣减提供了行级锁的载体。</li>
+<li><b>状态机写在 Order.transitTo() 里</b>，而不是散在 Service 中；图右侧的注释直接写明"非法转换抛异常且不改库"。</li>
+</ul>
+<div class="figure"><img src="UML/UML类图.png" style="width:172mm"></div>
+<p class="cap">图 4-2 类图：领域模型（14 类 + 6 枚举）</p>
+
+<h3>4.4 组件图</h3>
+<p><b>类型</b>：结构类（静态）。<b>目的</b>：说明系统由哪些可替换的组件构成、组件之间通过什么接口通信、一次下单要跨几个组件。</p>
+<p><b>要素与取舍</b>：4 个客户端组件、网关与会话组件、9 个应用组件（M1–M9，其中 M9 为通知）、5 个基础设施组件。绘制时特意把"订单组件"标注为编排中心，并在图下方注明"M3 库存与订单同库同事务"——这是整个架构最关键的一条约束，用图表达比用文字更直观。</p>
+<div class="figure"><img src="UML/UML组件图.png" style="width:172mm"></div>
+<p class="cap">图 4-3 组件图：客户端 / 网关 / 9 个应用组件 / 基础设施</p>
+
+<h3>4.5 包图</h3>
+<p><b>类型</b>：结构类（静态）。<b>目的</b>：给出代码的物理组织方式与依赖方向，回答"新人拿到仓库后代码放在哪一层"。</p>
+<p><b>要素与取舍</b>：com.campus.delivery 下分 interfaces / application / domain / infrastructure / common 五个包，domain 内再分 model / service / repository。图中用虚线箭头标出"仓储接口由 infrastructure 实现"，即依赖倒置。第一版包图把 38 个类全画进去，宽 4096px，后来删到 20 个代表性元素——包图表达的是<b>结构与依赖规则</b>，不是类的清单。</p>
+<div class="figure"><img src="UML/UML包图.png" style="width:168mm"></div>
+<p class="cap">图 4-4 包图：四层结构与依赖倒置</p>
+
+<h3>4.6 部署图</h3>
+<p><b>类型</b>：结构类（静态）。<b>目的</b>：说明软件跑在哪些节点上、节点之间用什么协议、故障时降级到什么程度。</p>
+<p><b>要素与取舍</b>：4 类客户端设备、Nginx、2 个应用实例、独立调度节点、MySQL 主从、Redis、对象存储。图上标注了两个关键设计：调度任务在多实例下要用锁保证只执行一次；应用采用"模块化单体 + 双实例"而不是微服务。这两条都直接对应 3.2 节的选型结论。</p>
+<div class="figure"><img src="UML/UML部署图.png" style="width:150mm"></div>
+<p class="cap">图 4-5 部署图：课程原型的节点与网络连接</p>
+
+<h3>4.7 活动图：下单流程</h3>
+<p><b>类型</b>：行为类（动态）。<b>目的</b>：把一个用例内部的判断逻辑展开，重点是<b>失败分支</b>——这正是实验一最容易被忽略、也最容易出 bug 的地方。</p>
+<p><b>要素与取舍</b>：用泳道区分「顾客 / 订单模块 / 库存模块 / 审计与通知」，四个判断节点分别对应四条需求：地址与范围（REQ-023）、幂等键（REQ-009）、价格变化（REQ-007）、库存扣减（REQ-010）。每个失败分支都以"提示并停止"结束，不留下半成品状态。</p>
+<div class="figure"><img src="UML/UML活动图-下单流程.png" style="width:172mm"></div>
+<p class="cap">图 4-6 活动图：提交订单的四个判断与回滚路径</p>
+
+<h3>4.8 状态图：订单生命周期</h3>
+<p><b>类型</b>：行为类（动态）。<b>目的</b>：把实验一 REQ-029 的 9 个状态、9 条白名单转换画成可核对的图，明确哪些是终态。</p>
+<p><b>要素与取舍</b>：9 个状态中把已完成、已退款、已取消标为终态（灰底）；每一条转换边都写了触发者与条件（如"商家拒单（必填原因）"）。三处注释说明了设计意图：待接单进入的前提是"库存已扣减、总额已校验、幂等键已记录"；配送中只能由骑手本人推进；退款失败不进"已退款"而进"退款异常"。这三条是把实验一的异常需求直接落到图上的结果。</p>
+<div class="figure"><img src="UML/UML状态图-订单.png" style="width:132mm"></div>
+<p class="cap">图 4-7 状态图：9 状态与 9 条合法转换，三个终态</p>
+
+<h3>4.9 时序图：提交订单</h3>
+<p><b>类型</b>：交互类。<b>目的</b>：按时间顺序展示一次下单中 8 个对象的协作，特别是幂等命中与库存不足两条 alt 分支。</p>
+<p><b>要素与取舍</b>：参与者按"客户端 → 网关 → 订单 → 库存 → 审计 → 数据库 → 消息队列"排列；用两个 alt 块分别处理"幂等键已存在"和"库存扣减失败"；图末注释强调订单、明细、库存、幂等记录、日志落在同一本地事务。这张图直接回答了"为什么不能拆库"。</p>
+<div class="figure"><img src="UML/UML时序图-提交订单.png" style="width:150mm"></div>
+<p class="cap">图 4-8 时序图：提交订单（幂等 + 库存事务）</p>
+
+<h3>4.10 时序图：超时未接单自动取消</h3>
+<p><b>类型</b>：交互类。<b>目的</b>：展示定时任务与人工操作的并发冲突如何被条件更新化解，以及"取消 → 释放库存 → 退款 → 日志 → 通知"的完整链路。</p>
+<p><b>要素与取舍</b>：核心是 UPDATE 语句带 <span class="tag">WHERE status='待接单' AND version=?</span>，影响行数为 0 就跳过——这样"商家恰好在这一秒接单"和"定时任务取消"不会同时成功。库存释放与退款都按订单号幂等，避免重复扫描造成二次回补或重复退款。</p>
+<div class="figure"><img src="UML/UML时序图-超时取消.png" style="width:135mm"></div>
+<p class="cap">图 4-9 时序图：超时未接单自动取消与退款</p>
+
+<h2 class="pb">5 UI 界面设计</h2>
+
+<h3>5.1 设计原则与信息架构</h3>
+<p>界面按"角色优先"组织：一个角色一个入口，入口里按任务频率排序。四条设计原则：</p>
+<ol>
+<li><b>异常态优先于正常态</b>：每个关键界面都必须能表达"售罄、价格变化、超时、退款异常"中的至少一种，因为实验一的 11 条异常需求最终都体现在界面上。</li>
+<li><b>状态可见</b>：订单状态、剩余处理时间、库存余量都用颜色 + 文案双重编码（不只靠颜色，照顾色觉障碍）。</li>
+<li><b>操作可逆可解释</b>：不可执行的操作要禁用并说明原因（如"配送中不可取消"），而不是直接隐藏按钮。</li>
+<li><b>双端栅格</b>：移动端 390×844（顾客/骑手），桌面端 1280×800（商家/管理员），间距统一 8px 栅格，主色 #FF6B35，语义色：绿=正常、橙=警示、红=危险/失败。</li>
+</ol>
+<table>
+<thead><tr><th style="width:17%">入口</th><th style="width:23%">角色</th><th style="width:36%">主要界面</th><th style="width:24%">对应模块</th></tr></thead>
+<tbody>
+<tr><td>顾客端 H5</td><td>顾客</td><td>菜品查询、菜品详情、购物车、确认订单、订单详情、我的订单</td><td>M1、M3、M4、M7</td></tr>
+<tr><td>商家端 Web</td><td>商家</td><td>订单看板、菜品与库存、经营统计</td><td>M2、M4、M5、M8</td></tr>
+<tr><td>骑手端 App</td><td>配送人员</td><td>配送任务（取餐/送达/报备失败）</td><td>M6</td></tr>
+<tr><td>运营管理端 Web</td><td>平台管理员</td><td>资质审核、异常处理、操作日志</td><td>M1、M7、M8</td></tr>
+</tbody>
+</table>
+
+<h3>5.2 顾客端</h3>
+<div class="two keep">
+  <div><img class="ui-mobile" src="UI界面/01-顾客-菜品查询.png"><p class="cap">图 5-1 菜品查询</p></div>
+  <div><img class="ui-mobile" src="UI界面/02-顾客-菜品详情.png"><p class="cap">图 5-2 菜品详情</p></div>
+</div>
+<table>
+<thead><tr><th style="width:16%">界面</th><th style="width:44%">功能与交互要点</th><th style="width:40%">对应需求/设计点</th></tr></thead>
+<tbody>
+<tr><td>菜品查询</td><td>顶部搜索框支持菜名/店名；分类与价格区间按 chip 多选；只展示营业中店铺；售罄菜品保留展示但标灰；底部说明"停业店铺不出现，已接订单继续履约"</td><td>REQ-006（多条件查询与排序）、REQ-004（营业状态）、REQ-010（售罄可见不可购）</td></tr>
+<tr><td>菜品详情</td><td>库存以"剩 3 份 / 共 20 份"呈现；规格与口味二选一；售罄商品整行置灰且按钮不可点；底部实时合计</td><td>REQ-005（每日库存）、REQ-007（加购）、REQ-010（余量提示）</td></tr>
+</tbody>
+</table>
+
+<div class="two keep">
+  <div><img class="ui-mobile" src="UI界面/03-顾客-购物车.png"><p class="cap">图 5-3 购物车（价格变化与售罄）</p></div>
+  <div><img class="ui-mobile" src="UI界面/04-顾客-确认订单.png"><p class="cap">图 5-4 确认订单</p></div>
+</div>
+<table>
+<thead><tr><th style="width:16%">界面</th><th style="width:44%">功能与交互要点</th><th style="width:40%">对应需求/设计点</th></tr></thead>
+<tbody>
+<tr><td>购物车</td><td>按店铺分组；改价商品显示"原价 → 新价"并高亮；售罄行整行变灰且不计入合计；必须勾选"已确认价格变化"才能结算</td><td>REQ-007（价格变化提示）、REQ-010（售罄拦截）</td></tr>
+<tr><td>确认订单</td><td>地址卡片直接给出"距离 1.2 km，在 3 km 范围内"的校验结果；金额明细到分；结算方式明确写"货到付款、系统内登记"</td><td>REQ-023（地址与范围校验）、REQ-008（价格快照与总额）、REQ-019（不接在线支付）</td></tr>
+</tbody>
+</table>
+
+<div class="two keep">
+  <div><img class="ui-mobile" src="UI界面/05-顾客-订单详情.png"><p class="cap">图 5-5 订单详情（状态时间轴）</p></div>
+  <div><img class="ui-mobile" src="UI界面/06-顾客-我的订单.png"><p class="cap">图 5-6 我的订单</p></div>
+</div>
+<table>
+<thead><tr><th style="width:16%">界面</th><th style="width:44%">功能与交互要点</th><th style="width:40%">对应需求/设计点</th></tr></thead>
+<tbody>
+<tr><td>订单详情</td><td>顶部大字状态 + 预计送达；时间轴显示四个已发生节点；"取消订单"在配送中变为禁用并说明原因；明细标注"下单时价格"</td><td>REQ-029（状态与禁止转换）、REQ-008（快照价格）、REQ-012（取消窗口）</td></tr>
+<tr><td>我的订单</td><td>状态筛选 chip；每单直接展示状态标签；超时取消的单显示"系统自动取消 + 已退款"；退款异常单用红框提示人工处理中</td><td>REQ-016（多条件查询）、REQ-024（超时取消）、REQ-012（退款异常可见）</td></tr>
+</tbody>
+</table>
+
+<h3>5.3 骑手端</h3>
+<div class="two keep">
+  <div><img class="ui-mobile" src="UI界面/10-骑手-配送任务.png"><p class="cap">图 5-7 配送任务</p></div>
+  <div style="width:95mm;text-align:left;font-size:9.4pt;line-height:1.8">
+    <p><b>功能</b>：待取餐 / 配送中 / 已完成三个分组；每个任务卡显示商家取餐号、顾客地址、距离与预计时间。</p>
+    <p><b>交互要点</b>：</p>
+    <ul style="padding-left:16px">
+      <li>未点"确认取餐"时，"确认送达"不可用（REQ-014）。</li>
+      <li>顾客手机号在列表脱敏为 138****1234，只有配送中的本单显示完整地址（REQ-022）。</li>
+      <li>"报备配送失败"必须填原因，提交后订单转配送失败并进入管理员核实队列（REQ-023）。</li>
+      <li>顶部明确骑手当前状态"接单中"，避免接到单却不知情。</li>
+    </ul>
+  </div>
+</div>
+
+<h3>5.4 商家端</h3>
+<div class="figure keep"><img class="ui-desktop" src="UI界面/07-商家-订单看板.png"></div>
+<p class="cap">图 5-8 订单看板（待接单倒计时、接单/拒单）</p>
+<div class="figure keep"><img class="ui-desktop" src="UI界面/08-商家-菜品与库存.png"></div>
+<p class="cap">图 5-9 菜品与库存（改价、补货、售罄、上下架）</p>
+<div class="figure keep"><img class="ui-desktop" src="UI界面/09-商家-经营统计.png"></div>
+<p class="cap">图 5-10 经营统计（营业额、销量、异常率与统计口径）</p>
+<table>
+<thead><tr><th style="width:16%">界面</th><th style="width:44%">功能与交互要点</th><th style="width:40%">对应需求/设计点</th></tr></thead>
+<tbody>
+<tr><td>订单看板</td><td>KPI 区显示待接单数与超时率；每条待接单给出剩余处理时间倒计时，低于 5 分钟显示红色；接单/拒单两键并列，拒单强制填原因；右侧提示区解释"拒单会自动退款并释放库存"</td><td>REQ-011（接单/拒单）、REQ-024（5 分钟超时）、REQ-017（超时率）</td></tr>
+<tr><td>菜品与库存</td><td>表格直接呈现"剩余/总量"；余量为 0 标红"已售罄"；改价弹层显示原价→新价，并注明"不影响已下单订单"；补货、下架在同一行操作</td><td>REQ-005（改价留痕、每日库存）、REQ-008（快照不影响历史单）</td></tr>
+<tr><td>经营统计</td><td>7 日营业额柱状图 + 菜品销量 Top5；KPI 含超时未接单率与配送失败率；页面底部固定"统计口径"说明，避免与订单列表对不上</td><td>REQ-017（统计汇总与口径）、REQ-002（营业额只计已完成）</td></tr>
+</tbody>
+</table>
+
+<h3>5.5 平台管理端</h3>
+<div class="figure keep"><img class="ui-desktop" src="UI界面/11-管理端-资质审核.png"></div>
+<p class="cap">图 5-11 资质审核（证照唯一性校验、驳回必填原因）</p>
+<div class="figure keep"><img class="ui-desktop" src="UI界面/12-管理端-异常处理.png"></div>
+<p class="cap">图 5-12 异常处理（退款异常队列、配送失败核实）</p>
+<div class="figure keep"><img class="ui-desktop" src="UI界面/13-管理端-操作日志.png"></div>
+<p class="cap">图 5-13 操作日志（多条件查询、状态前后变化、越权拦截记录）</p>
+<table>
+<thead><tr><th style="width:16%">界面</th><th style="width:44%">功能与交互要点</th><th style="width:40%">对应需求/设计点</th></tr></thead>
+<tbody>
+<tr><td>资质审核</td><td>商家营业执照与骑手健康证在同一列表；系统直接给出"编号唯一 ✓ / 重复 ✗""证照在有效期 ✓ / 过期 ✗"的校验结论；不合法时"通过"按钮置灰</td><td>REQ-002（资质审核与唯一性）、REQ-003（仅管理员可审）</td></tr>
+<tr><td>异常处理</td><td>退款异常按等待时长排序，展示失败原因与重试次数，提供"重试退款/手工登记"；配送失败单展示失败原因与已失败次数，提供"重新派单/核实后退款"</td><td>REQ-012（退款一致性）、REQ-023（配送失败处理）</td></tr>
+<tr><td>操作日志</td><td>四个筛选条件（操作人/类型/时间/关键字）；每行呈现"变更前 → 变更后"与来源 IP；越权尝试以红色"拒绝 403"记录，可与业务日志同表检索</td><td>REQ-018（日志记录）、REQ-016（多条件查询）、REQ-022（越权拦截）</td></tr>
+</tbody>
+</table>
+
+<h2 class="pb">6 AI 辅助设计的过程与反思</h2>
+
+<h3>6.1 使用原则</h3>
+<p>本次设计把 AI 当作"加速器"而不是"决策者"，给自己定了三条规则：①结构性问题（模块怎么分、状态怎么转）由我先定，再让 AI 补充细节；②AI 产出的每一张图、每一个界面都要能用实验一的需求编号解释，解释不了就重做；③所有生成物都经过至少一轮修改，修改点记录在下面。</p>
+
+<h3>6.2 使用记录</h3>
+
+<h4>UC-01 生成类图骨架</h4>
+<table>
+<thead><tr><th style="width:14%">项目</th><th>内容</th></tr></thead>
+<tbody>
+<tr><td>使用场景</td><td>已确定 8 个模块，需要一份领域类图初稿，包含实体、枚举与关系。</td></tr>
+<tr><td>我的提示词</td><td>摘要：「为校园外卖系统画 PlantUML 类图，包含顾客/商家/骑手/管理员、店铺、菜品、每日库存、订单、订单明细、配送单、退款、日志；标注多重性；金额用分；给出每个类的关键字段和方法。」</td></tr>
+<tr><td>生成结果</td><td>给出 14 个类 + 6 个枚举，关系基本正确，但把 9 个应用服务接口也画进了同一个类图，导致图宽 4096px；此外漏了"幂等记录"类，配送单被画成 1:N。</td></tr>
+<tr><td>优点</td><td>字段命名规范（xxxCents、xxxAt），枚举值齐全，省去了从零列举属性的大量时间。</td></tr>
+<tr><td>问题</td><td>①把"服务接口"和"领域实体"混在一张图，违反类图聚焦领域模型的惯例；②一单一配送单这个关键约束画错；③漏了幂等记录，等于漏掉了 REQ-009 的实现载体。</td></tr>
+<tr><td>我的修改</td><td>拆掉服务接口（改由组件图表达）；补 IdempotencyRecord、OperationLog、Refund 三个类；把配送单改为 0..1 并在 note 中写明"唯一"；最终宽度 2052px，可放进 A4。</td></tr>
+</tbody>
+</table>
+
+<h4>UC-02 用例图布局</h4>
+<table>
+<thead><tr><th style="width:14%">项目</th><th>内容</th></tr></thead>
+<tbody>
+<tr><td>使用场景</td><td>需要一张能同时表达四类角色与 20 余个用例的用例图。</td></tr>
+<tr><td>我的提示词</td><td>摘要：「按角色列出外卖系统用例，用 package 分组，标出 include/extend，使用 left to right direction。」</td></tr>
+<tr><td>生成结果</td><td>生成 5 个包、32 条连线、大量 include/extend 的版本，渲染后 1053×2194，连线横穿整张图，几乎无法阅读。</td></tr>
+<tr><td>优点</td><td>用例划分的业务含义准确，include/extend 的方向没有搞反。</td></tr>
+<tr><td>问题</td><td>布局被"多分组 + 多关系"拖垮；用例图的核心价值（边界与角色）被关系线淹没。</td></tr>
+<tr><td>我的修改</td><td>合并为 3 组、角色连线保留、include/extend 只留 8 条最关键的；增加「定时任务」系统参与者；比例从 0.48 变成 0.71，一页可读。</td></tr>
+</tbody>
+</table>
+
+<h4>UC-03 活动图：把异常分支补全</h4>
+<table>
+<thead><tr><th style="width:14%">项目</th><th>内容</th></tr></thead>
+<tbody>
+<tr><td>使用场景</td><td>需要表达提交订单的内部判断，尤其是失败路径。</td></tr>
+<tr><td>我的提示词</td><td>摘要：「画下单流程活动图，分为顾客、订单、库存三个泳道，包含地址校验、库存扣减、订单创建。」</td></tr>
+<tr><td>生成结果</td><td>生成了主流程，但只有"库存不足"一个判断；没有幂等键判断，也没有价格变化分支；失败时直接结束，没写"整单回滚"。</td></tr>
+<tr><td>优点</td><td>泳道划分合理，主干顺序正确。</td></tr>
+<tr><td>问题</td><td>漏掉实验一明确要求的两类异常（重复提交、改价），且没体现事务回滚，读图者会以为扣减失败后库存仍然被改。</td></tr>
+<tr><td>我的修改</td><td>补"幂等键已存在 → 返回原单""价格已变化 → 要求重新确认""扣减失败 → 整单回滚且余量不变"三条分支，并在每个分支标注对应需求号。</td></tr>
+</tbody>
+</table>
+
+<h4>UC-04 状态图：终态与退款异常</h4>
+<table>
+<thead><tr><th style="width:14%">项目</th><th>内容</th></tr></thead>
+<tbody>
+<tr><td>使用场景</td><td>把 REQ-029 的 9 个状态画成状态图。</td></tr>
+<tr><td>我的提示词</td><td>摘要：「画订单状态图，状态有待接单、已接单、待取餐、配送中、已完成、已取消、已拒单、配送失败、已退款，给出转换条件。」</td></tr>
+<tr><td>生成结果</td><td>9 个状态与主链路正确，但没有标出终态，也没有说明"退款失败"时怎么办；配送失败到已退款的边缺少"管理员核实"这一前置条件。</td></tr>
+<tr><td>优点</td><td>转换条件写得具体（"商家接单""顾客确认"），可直接对应到接口。</td></tr>
+<tr><td>问题</td><td>状态图没有终态就等于没有说清"哪些操作永远不可能再发生"，而 REQ-029 的核心正是"禁止的转换"。</td></tr>
+<tr><td>我的修改</td><td>给已完成/已取消/已退款加「终态」样式与说明；补"配送失败 → 重新派单 → 配送中"的回环；在注释中写明退款失败置"退款异常"而非"已退款"。</td></tr>
+</tbody>
+</table>
+
+<h4>UC-05 UI 初稿到可用界面</h4>
+<table>
+<thead><tr><th style="width:14%">项目</th><th>内容</th></tr></thead>
+<tbody>
+<tr><td>使用场景</td><td>13 屏界面需要统一的视觉规范与布局。</td></tr>
+<tr><td>我的提示词</td><td>摘要：「设计外卖 App 的菜品列表页和购物车页，给出配色、卡片结构与主要元素。」</td></tr>
+<tr><td>生成结果</td><td>给出了橙色主色 + 圆角卡片 + 图片左文右价的布局建议，风格可用；但只画了"一切正常"的状态，没有售罄、改价、超时等异常态；桌面端完全没有考虑。</td></tr>
+<tr><td>优点</td><td>配色方案（#FF6B35 主色、语义色分离）与卡片信息层级合理，直接沿用；省去了配色试错。</td></tr>
+<tr><td>问题</td><td>①异常态缺失，而实验一的 11 条异常需求最终都要在界面上表达；②移动端与桌面端没有区分栅格。</td></tr>
+<tr><td>我的修改</td><td>建立 8px 栅格与移动 390×844 / 桌面 1280×800 两套尺寸；给购物车加"价格已变化"与"售罄置灰"、给商家看板加 5 分钟倒计时、给订单详情加禁用态与原因说明、给异常处理页加"重试/重新派单"双路径；共 13 屏全部重画。</td></tr>
+</tbody>
+</table>
+
+<h4>UC-06 报告措辞的纠偏</h4>
+<table>
+<thead><tr><th style="width:14%">项目</th><th>内容</th></tr></thead>
+<tbody>
+<tr><td>使用场景</td><td>让 AI 帮忙润色"关键设计决策"一节。</td></tr>
+<tr><td>我的提示词</td><td>摘要：「把下面 7 条设计决策改写得更专业、更简洁。」</td></tr>
+<tr><td>生成结果</td><td>文字确实更通顺，但把"采用了条件扣减"改写成"系统绝不会超卖"这类绝对化结论，还删掉了需求编号。</td></tr>
+<tr><td>优点</td><td>句式紧凑，适合报告体裁。</td></tr>
+<tr><td>问题</td><td>把"设计意图"写成了"已验证的事实"——设计阶段并没有压测数据支撑"绝不超卖"，这种表述在评审时会被追问。</td></tr>
+<tr><td>我的修改</td><td>全部改回"做法 + 依据需求编号"的可核对表述，删掉绝对化措辞；结论只写在验收方法里。</td></tr>
+</tbody>
+</table>
+
+<h3>6.3 辅助工具的优缺点分析</h3>
+<table>
+<thead><tr><th style="width:16%">维度</th><th style="width:42%">优点（本次实际感受到的）</th><th style="width:42%">局限（本次实际踩到的）</th></tr></thead>
+<tbody>
+<tr><td>结构生成</td><td>类、字段、枚举能一次列全，命名风格统一，省去大量查漏补缺的时间</td><td>不知道"哪些该画进同一张图"，容易把服务接口混进类图</td></tr>
+<tr><td>图布局</td><td>PlantUML 语法正确，关系方向基本不出错</td><td>对"可读性"没有概念，图会越画越宽/越长，需要人工按页面尺寸反推结构</td></tr>
+<tr><td>业务规则</td><td>能复述常见的订单状态与流转</td><td>抓不住项目的特有约束（一单一配送单、退款异常、超时必须幂等），这些恰恰是需求文档里的重点</td></tr>
+<tr><td>界面设计</td><td>配色、间距、信息层级的建议直接可用</td><td>只画"快乐路径"，异常态与禁用态几乎不主动给</td></tr>
+<tr><td>文字表达</td><td>句式紧凑、术语规范，适合做初稿</td><td>倾向把设计意图写成绝对结论，会削弱报告的可信度</td></tr>
+</tbody>
+</table>
+
+<h3>6.4 能否设计一套"人只做检查校对"的工作流</h3>
+<p>本次体验下来，答案是<b>可以做到大部分，但"检查"这一步无法取消，只能前移</b>。我尝试总结一条可落地的工作流：</p>
+<table>
+<thead><tr><th style="width:6%">步</th><th style="width:22%">环节</th><th style="width:34%">由谁做</th><th style="width:38%">产出与校验点</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>约束抽取</td><td>人（不可替代）</td><td>从需求文档抽出硬约束清单：状态数、唯一性、异常分支、非功能指标。这是后续所有校验的基准。</td></tr>
+<tr><td>2</td><td>批量生成</td><td>AI</td><td>按模板生成 PlantUML / 界面 / 表格，一次生成多版供挑选。</td></tr>
+<tr><td>3</td><td>机器校验</td><td>脚本</td><td>自动检查：需求编号是否都有落点、状态转换是否都在白名单内、图片宽高比是否适配 A4、界面是否覆盖全部异常态。这一步把"人工翻图"变成"跑脚本"。</td></tr>
+<tr><td>4</td><td>人工审阅</td><td>人</td><td>只看三类问题：语义是否答非所问、约束是否被违反、结论是否有依据。不看排版细节。</td></tr>
+<tr><td>5</td><td>定稿与追溯</td><td>人</td><td>每次修改对应一个需求编号或一条审查记录，形成可回溯的设计日志。</td></tr>
+</tbody>
+</table>
+<p>这条流水线里，人真正保留的是<b>第 1 步的约束定义</b>和<b>第 4 步的语义判断</b>，其余交给 AI 与脚本。换句话说：AI 能把"画图、排版、措辞"的成本压到接近零，但"决定什么是对的"这件事无法外包——而后者恰好是设计工作中最值钱的部分。</p>
+
+<h3>6.5 反思</h3>
+<ul>
+<li><b>AI 最容易犯的错是"看起来合理"</b>：一单一配送单画成 1:N、状态图不标终态，单看都通顺，只有对着需求逐条核对才会暴露。</li>
+<li><b>生成速度提高了，验证成本并没有降低</b>：AI 10 秒能出一张图，但判断它能不能用仍要几分钟。所以真正的效率提升来自"减少返工"，而不是"减少打字"。</li>
+<li><b>需求文档是 AI 的"护栏"</b>：本次凡是被需求编号约束住的产出（状态机、幂等、退款）质量都高；凡是需求没写死的地方（界面异常态、图的分组粒度），AI 就开始自由发挥。</li>
+</ul>
+
+<h2 class="pb">7 版本与提交信息</h2>
+
+<h3>7.1 仓库与提交记录</h3>
+<p>本次设计全程用 Git 追踪，分成"AI 生成初稿"与"人工修改"两次提交，标签固定后不再移动。差异可以用 <span class="tag">git diff lab2-ai-draft lab2-final --stat</span> 复核。</p>
+<table>
+<thead><tr><th style="width:24%">项目</th><th>内容</th></tr></thead>
+<tbody>
+<tr><td>仓库地址</td><td><a href="https://github.com/cxh4387-dotcom/se-lab2">https://github.com/cxh4387-dotcom/se-lab2</a></td></tr>
+<tr><td>分支</td><td><span class="tag">main</span></td></tr>
+<tr><td>lab2-ai-draft（AI 初稿）</td><td><span class="tag">c6270be6eeba01ecddeb13a9977b014928d1935e</span></td></tr>
+<tr><td>lab2-final（人工修改）</td><td><span class="tag">b55427ce8d371464f1d5e6f4210d47eaef57ebef</span></td></tr>
+<tr><td>初稿内容</td><td>UML 6 张（类图、用例图、组件图、包图、活动图、提交订单时序图）+ UI 11 屏</td></tr>
+<tr><td>人工修改内容</td><td>新增状态图、部署图、超时取消时序图（+3 图），新增异常处理与操作日志界面（+2 屏），并逐条核对图与界面对需求的覆盖</td></tr>
+</tbody>
+</table>
+
+<h3>7.2 提交文件清单</h3>
+<table>
+<thead><tr><th style="width:30%">路径</th><th style="width:14%">数量</th><th>说明</th></tr></thead>
+<tbody>
+<tr><td>实验报告.pdf</td><td>1</td><td>本报告</td></tr>
+<tr><td>UML/*.puml</td><td>9</td><td>PlantUML 源文件，可直接重新渲染</td></tr>
+<tr><td>UML/*.png</td><td>9</td><td>对应的渲染图，报告中的插图即引用这些文件</td></tr>
+<tr><td>UI界面/*.png</td><td>13</td><td>顾客端 6 屏、商家端 3 屏、骑手端 1 屏、管理端 3 屏</td></tr>
+</tbody>
+</table>
+
+<h3>7.3 设计对需求的处理方式</h3>
+<table>
+<thead><tr><th style="width:22%">处理方式</th><th style="width:44%">涉及需求</th><th style="width:34%">说明</th></tr></thead>
+<tbody>
+<tr><td>完整设计</td><td>REQ-001～014、016～018、023、024、029</td><td>有类、有接口、有界面、有异常分支，实现阶段可直接照做</td></tr>
+<tr><td>设计细化但留参数</td><td>REQ-020（具体阈值）、REQ-025（可用性口径）</td><td>结构上支持（压测入口、健康检查、事务边界），具体数值在实现阶段按实际机器标定</td></tr>
+<tr><td>本期不实现</td><td>REQ-015（骑手评分）、REQ-019（在线支付）</td><td>已拒绝，界面与数据模型均不预留入口，避免"做了半个"</td></tr>
+<tr><td>待确认</td><td>REQ-026（骑手抢单）</td><td>设计上保留 DeliveryTask 的指派方式字段，但不实现抢单入口</td></tr>
+</tbody>
+</table>
+
+<h2>8 遗留问题与后续实现清单</h2>
+<p>按任务书"允许留 TODO，但基本结构要完整"的要求，以下是刻意留给实验三的实现细节，均不影响架构成立：</p>
+<table>
+<thead><tr><th style="width:6%">#</th><th style="width:30%">TODO</th><th style="width:34%">原因</th><th style="width:30%">实现时的注意点</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>短信验证码与真实登录态</td><td>课程环境无短信网关</td><td>先用固定验证码或控制台输出，接口保持不变</td></tr>
+<tr><td>2</td><td>3 公里配送范围的真实计算</td><td>不接入地图服务</td><td>用经纬度球面距离近似（Haversine），阈值可配置</td></tr>
+<tr><td>3</td><td>统计的定时汇总任务</td><td>原型阶段数据量小</td><td>先实时聚合，接口不变；数据量上来再切换到 statistics_daily</td></tr>
+<tr><td>4</td><td>Outbox 的失败重试与告警</td><td>需要消息中间件</td><td>先用数据库轮询表实现，语义与 MQ 一致</td></tr>
+<tr><td>5</td><td>菜品图片上传</td><td>对象存储需申请</td><td>先存本地目录，接口返回 URL 的形式不变</td></tr>
+<tr><td>6</td><td>压测与可用性实测</td><td>依赖部署环境</td><td>按 REQ-020/025 的脚本与口径执行并留档</td></tr>
+<tr><td>7</td><td>抢单模式</td><td>REQ-026 待确认</td><td>只在 DeliveryTask 预留字段，不开放入口</td></tr>
+</tbody>
+</table>
+
+<h2 class="pb">附录 A 需求覆盖矩阵</h2>
+<p>下表把实验一的每条需求映射到本实验的模块、UML 图与界面，用于检查"需求是否有落点、设计是否有依据"。状态列与实验一保持一致。</p>
+<table class="matrix">
+<thead><tr><th style="width:11%">需求</th><th style="width:25%">名称</th><th style="width:9%">状态</th><th style="width:13%">模块</th><th style="width:24%">图</th><th style="width:18%">界面</th></tr></thead>
+<tbody>
+<tr><td>REQ-001</td><td>顾客注册与登录</td><td>已确认</td><td>M1</td><td>用例图、类图</td><td>—</td></tr>
+<tr><td>REQ-002</td><td>商家与骑手资质审核</td><td>已确认</td><td>M1</td><td>用例图、活动图</td><td>图 5-11</td></tr>
+<tr><td>REQ-003</td><td>角色权限控制</td><td>已确认</td><td>M1</td><td>组件图、类图</td><td>全部入口</td></tr>
+<tr><td>REQ-004</td><td>店铺营业状态管理</td><td>已确认</td><td>M2</td><td>类图、状态图（隐含）</td><td>图 5-1</td></tr>
+<tr><td>REQ-005</td><td>菜品维护与每日库存</td><td>已确认</td><td>M2</td><td>类图（Dish/DailyStock）</td><td>图 5-2、5-9</td></tr>
+<tr><td>REQ-006</td><td>菜品多条件查询与排序</td><td>已确认</td><td>M3</td><td>用例图</td><td>图 5-1</td></tr>
+<tr><td>REQ-007</td><td>购物车与价格、售罄提示</td><td>已确认</td><td>M3</td><td>活动图（价格分支）</td><td>图 5-3</td></tr>
+<tr><td>REQ-008</td><td>提交订单与价格快照</td><td>已确认</td><td>M4</td><td>类图、活动图、时序图 1</td><td>图 5-4</td></tr>
+<tr><td>REQ-009</td><td>重复下单与重复请求处理</td><td>已确认</td><td>M4</td><td>活动图、时序图 1</td><td>图 5-4</td></tr>
+<tr><td>REQ-010</td><td>库存并发扣减与售罄拦截</td><td>已确认</td><td>M5</td><td>活动图、时序图 1/2</td><td>图 5-2、5-9</td></tr>
+<tr><td>REQ-011</td><td>商家接单与拒单</td><td>已确认</td><td>M4</td><td>状态图、用例图</td><td>图 5-8</td></tr>
+<tr><td>REQ-012</td><td>订单取消与退款一致性</td><td>已确认</td><td>M4/M7</td><td>状态图、类图（Refund）</td><td>图 5-5、5-12</td></tr>
+<tr><td>REQ-013</td><td>制作完成与配送指派</td><td>已确认</td><td>M6</td><td>状态图、组件图</td><td>图 5-8</td></tr>
+<tr><td>REQ-014</td><td>配送执行与送达确认</td><td>已确认</td><td>M6</td><td>状态图、用例图</td><td>图 5-7</td></tr>
+<tr><td>REQ-015</td><td>骑手评价与评分</td><td>已拒绝</td><td>—</td><td>—</td><td>不预留入口</td></tr>
+<tr><td>REQ-016</td><td>订单与操作日志多条件查询</td><td>已确认</td><td>M8</td><td>类图、组件图</td><td>图 5-6、5-13</td></tr>
+<tr><td>REQ-017</td><td>经营统计汇总</td><td>已确认</td><td>M8</td><td>组件图</td><td>图 5-10</td></tr>
+<tr><td>REQ-018</td><td>关键操作日志记录</td><td>已确认</td><td>M8</td><td>类图（OperationLog）、时序图</td><td>图 5-13</td></tr>
+<tr><td>REQ-019</td><td>在线支付与自动退款</td><td>已拒绝</td><td>—</td><td>—</td><td>界面标注"货到付款"</td></tr>
+<tr><td>REQ-020</td><td>查询与下单响应时间</td><td>已确认</td><td>—</td><td>部署图（容量估算）</td><td>—</td></tr>
+<tr><td>REQ-021</td><td>数据唯一性与一致性约束</td><td>已确认</td><td>全部</td><td>类图、3.8 表设计</td><td>—</td></tr>
+<tr><td>REQ-022</td><td>账号与敏感信息保护</td><td>已确认</td><td>M1</td><td>组件图（鉴权链）</td><td>图 5-7、5-8 脱敏</td></tr>
+<tr><td>REQ-023</td><td>配送失败与地址异常</td><td>已确认</td><td>M6</td><td>活动图、状态图</td><td>图 5-7、5-12</td></tr>
+<tr><td>REQ-024</td><td>超时未接单自动取消</td><td>已确认</td><td>M4</td><td>时序图 2、状态图</td><td>图 5-8</td></tr>
+<tr><td>REQ-025</td><td>可用性与故障恢复</td><td>已确认</td><td>—</td><td>部署图</td><td>—</td></tr>
+<tr><td>REQ-026</td><td>骑手抢单模式</td><td>待确认</td><td>M6</td><td>—（预留字段）</td><td>不提供入口</td></tr>
+<tr><td>REQ-027</td><td>下单易用性</td><td>已确认</td><td>—</td><td>—</td><td>图 5-1～5-6</td></tr>
+<tr><td>REQ-028</td><td>浏览器与终端兼容性</td><td>已确认</td><td>—</td><td>部署图（客户端类型）</td><td>双端栅格</td></tr>
+<tr><td>REQ-029</td><td>订单状态机与非法转换拦截</td><td>已确认</td><td>M4</td><td>状态图、类图（Order）</td><td>图 5-5 禁用态</td></tr>
+</tbody>
+</table>
+
+<p class="small" style="margin-top:10px">说明：UML 源文件与渲染图位于 <span class="tag">UML/</span>，界面图位于 <span class="tag">UI界面/</span>；本报告中的插图与这两个目录下的文件一一对应，修改源文件后可重新渲染覆盖。</p>
+
+</body>
+</html>
